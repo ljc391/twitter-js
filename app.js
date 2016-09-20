@@ -1,34 +1,61 @@
 var express = require( 'express' );
 var app = express();
 
+var routes = require('./routes');
+app.use('/', routes);
+
+
+var nunjucks = require('nunjucks');
+
+
+
 //Volleyball Library
 const volleyball = require('volleyball');
 app.use(volleyball);
 
-const logger = volleyball.custom({ debug: true });
-app.use(logger);
 
-app.get('/', function (req, res) {
-  res.send('HERE!!!!!!!');
-  //logger();
+
+
+
+var locals = {
+    title: 'An Example',
+    people: [
+        { name: 'Gandalf'},
+        { name: 'Frodo' },
+        { name: 'Hermione'}
+    ]
+};
+nunjucks.configure('views', {noCache: true});
+nunjucks.render('layout.html', locals, function (err, output) {
+    console.log(output);
 });
 
-app.get('/is-anybody-in-there', function (req, res) {
-  res.send('this is a response to GET\n');
-});
+app.set('view engine', 'html');
+app.engine('html', nunjucks.render);
 
-app.post('/post', function (request, response) {
- response.send('this is a response to POST\n')
- logger();
-});
 
-app.put('/update', function(req, res, next){
-    res.send('this is a response to UPDATE\n');
-});
+// app.get('/', function (req, res) {
+//   res.render('layout.html', locals);
+//   //logger();
+// });
 
-app.delete('/delete', function(req, res, next){
-    res.send('this is a response to DELETE\n');
-});
+
+// var data = {
+//   title: 'An Example',
+//   people: [
+//     {name: 'Gandalf'},
+//     {name: 'Frodo'},
+//     {name: 'Hermione'}
+//   ],
+// };
+
+// nunjucks.configure('/views');
+// nunjucks.render('layout.html', data, function(err, output) {
+//   console.log(output)
+// });
+
+
+
 
 app.use('/chaining-url', function (req, res, next) {
   //res.send('this is a response to GET\n');
@@ -45,3 +72,4 @@ app.listen(3000, function(){
     console.log('server is listening on port 3000');
 
 });
+
