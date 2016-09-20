@@ -42,6 +42,8 @@ for (var i = 0; i < 10; i++) {
 
 //---------------------
 
+console.log(data);
+
 
 //console.log(data);
 console.log(find(['name', 'Dave']));

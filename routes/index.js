@@ -4,24 +4,27 @@ var router = express.Router();
 var tweetBank = require('../tweetBank');
 
 var path = require('path');
+var tweets = tweetBank.list();
 
 router.get('/', function (req, res) {
-  var tweets = tweetBank.list();
+  console.log('tweets: ' + tweets);
   res.render( 'index', { tweets: tweets } );
 });
 
 
-router.use(express.static('public'));
+router.use(express.static('public')); // shows any files by url that are in the public folder
 
-// Go ahead and build out a route to serve up this file. 
-// When you're done, you should be able to hit 
-// localhost:3000/stylesheets/style.css from your browser 
-// and get the CSS file rendered in your browser.
 
-// router.get('/stylesheets/style.css', function(req, res, next) {
-// 	console.log('we are here!');
-// 	res.sendFile(path.join(__dirname, '../public', 'stylesheets/style.css'));
-// });
+
+
+router.get( '/users/:name', function(req, res, next) {
+	var userName = req.params.name;
+	var tweets = tweetBank.list();
+	console.log('tweets: ' + tweets);
+	var userTweets = tweetBank.find(['name', userName]);
+	console.log('userTweets.name: ' + userTweets['name']);
+	res.render('profile', {userTweets: userTweets});
+});
 
 
 
